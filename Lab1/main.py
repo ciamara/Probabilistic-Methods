@@ -66,9 +66,9 @@ class City:
     def distance(self, other):
         return ((self.lat - other.lat)**2 + (self.lon - other.lon)**2)**0.5
 
-n = 5
-k = 3
-m = 3
+n = 5 # how many cities -> n first from data
+k = 3 # length of permutations
+m = 3 # size of subsets
 
 #input and format data
 with open("italy.txt", "r") as file:
@@ -103,8 +103,9 @@ order_distances = list(zip(orders, distances))
 order_distances.sort(key=lambda x: x[1])
 
 #shortest trip in the beginning
-print("Shortest trip: ")
-print([str(x) for x in order_distances[0][0]], order_distances[0][1])
+print("Shortest trip (cycle): ")
+shortest_trip = [str(city) for city in order_distances[0][0]] + [str(order_distances[0][0][0])]
+print(shortest_trip, order_distances[0][1])
 print("\n")
 
 
@@ -117,18 +118,21 @@ best_match = float('inf')  #initial difference -> infinity
 best_subset = None
 
 populations = []
+valid_subsets = [] #without repetitions (valid)
+
 for subset in subsets:
+
+    if len(set(subset)) != len(subset):  # if a city is doubled -> skip
+        continue
+
     result = 0
     used = set() #no duplicates
 
     for city in subset:
-        if city in used:
-            continue  # we skip the cities that have been used
         result += city.population
-        used.add(city)
 
-    #population
     populations.append(result)
+    valid_subsets.append(subset)
 
     # if closer to 50% than previous match?
     if abs(result - target_population) < best_match:
@@ -136,7 +140,7 @@ for subset in subsets:
         best_subset = subset
 
 # grouping subsets with their populations
-subset_population = list(zip(subsets, populations))
+subset_population = list(zip(valid_subsets, populations))
 subset_population.sort(key=lambda x: abs(x[1] - target_population))  # sort by distance from 50%
 
 print(f"Total population: {total_population}")
