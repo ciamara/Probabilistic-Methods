@@ -1,12 +1,12 @@
-def generate_orders(data: list, k: int, current: list = None, n: int = 0, results: list = None):
-    # permutations(orders) of length k
+def generate_variations(data: list, k: int, current: list = None, n: int = 0, results: list = None):
+    # variations of length k
 
     if current is None:
         current = []
     if results is None:
         results = []
 
-    #the permutation is complete
+    #the variation is complete
     if len(current) == k:
         print(n+1, [x.id for x in current])
         results.append(current)
@@ -22,7 +22,7 @@ def generate_orders(data: list, k: int, current: list = None, n: int = 0, result
         new_data.remove(elem)   #so it isnt used again
 
         # recursive call
-        n, results = generate_orders(new_data, k, new_current, n, results)
+        n, results = generate_variations(new_data, k, new_current, n, results)
 
     # permutations(orders)
     return (n, results)
@@ -67,20 +67,20 @@ class City:
         return ((self.lat - other.lat)**2 + (self.lon - other.lon)**2)**0.5
 
 n = 5 # how many cities -> n first from data
-k = 3 # length of permutations
+k = 3 # length of variations
 m = 3 # size of subsets
 
 #input and format data
-with open("italy.txt", "r") as file:
+with open("france.txt", "r") as file:
     data: list[City] = []
     for line in file.readlines()[1:n+1]:
         line_data = line.strip().replace('\n', '').split(' ')
         data.append(City(int(line_data[0]), line_data[1], int(line_data[2]), float(line_data[3]), float(line_data[4])))
 
-#create orders(porzadki odwiedzin M z N)
-print("Permutations(orders)")
-orders_count, orders = generate_orders(data, k)
-print(f"n = {n}, k = {k}, orders_count = {orders_count}\n\n")
+#create variations (porzadki odwiedzin M z N)
+print("Variations(without repeats)")
+variations_count, variations = generate_variations(data, k)
+print(f"n = {n}, k = {k}, variations_count = {variations_count}\n\n")
 
 #subsets(podzbiory z mozliwymi powtorzeniami)
 print("Subsets: ")
@@ -89,7 +89,7 @@ print(f"n = {n}, m = {m}, subsets_count = {subsets_count}\n\n")
 
 #distances for all permutations(orders)
 distances = []
-for order in orders:
+for order in variations:
     result = 0
     current = order[0]
     for city in order[1:]:
@@ -99,7 +99,7 @@ for order in orders:
     distances.append(result)
 
 # ascending sort so the first entry is the smallest
-order_distances = list(zip(orders, distances))
+order_distances = list(zip(variations, distances))
 order_distances.sort(key=lambda x: x[1])
 
 #shortest trip in the beginning

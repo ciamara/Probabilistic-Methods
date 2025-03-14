@@ -1,5 +1,5 @@
 Id Town	Population Latitude Longitude
-1 Paris	2138 48.8566 2.3522
+1 Paris 2138 48.8566 2.3522
 2 Marseille 861 43.2965 5.3699
 3 Lyon 515 45.7578 4.8320
 4 Toulouse 479 43.6047 1.4442
