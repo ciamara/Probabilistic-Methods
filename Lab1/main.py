@@ -195,3 +195,4 @@ print(f"Population range for probability calculation: {lower_bound:.2f} - {upper
 print(f"Total subsets checked: {total_subsets}")
 print(f"Valid subsets in range: {valid_count}")
 print(f"Probability of a random subset falling within 40%-60% of total population: {probability:.4f}")
+print("\n\n")
