@@ -123,6 +123,46 @@ print(shortest_trip, order_distances[0][1])
 print("\n")
 
 
+# population for subsets
+
+total_population = sum(city.population for city in data[:n])
+target_population = total_population / 2
+
+best_match = float('inf')  #initial difference -> infinity
+best_subset = None
+
+populations = []
+valid_subsets = [] #without repetitions (valid)
+
+for subset in subsets:
+
+    if len(set(subset)) != len(subset):  # if a city is doubled -> skip
+        continue
+
+    result = 0
+    used = set() #no duplicates
+
+    for city in subset:
+        result += city.population
+
+    populations.append(result)
+    valid_subsets.append(subset)
+
+    # if closer to 50% than previous match?
+    if abs(result - target_population) < best_match:
+        best_match = abs(result - target_population)
+        best_subset = subset
+
+# grouping subsets with their populations
+subset_population = list(zip(valid_subsets, populations))
+subset_population.sort(key=lambda x: abs(x[1] - target_population))  # sort by distance from 50%
+
+print(f"Total population: {total_population}")
+print(f"Target 50% population: {target_population:.2f}")
+print("Closest subset to 50% of total population: ")
+print([str(city) for city in best_subset], best_match + target_population)
+print("\n")
+
 # Population for subsets
 
 total_population = sum(city.population for city in data[:n])
