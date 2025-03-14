@@ -1,3 +1,5 @@
+import math
+
 def generate_variations(data: list, k: int, current: list = None, n: int = 0, results: list = None):
     # variations of length k
 
@@ -69,6 +71,8 @@ class City:
 n = 5 # how many cities -> n first from data
 k = 3 # length of variations
 m = 3 # size of subsets
+variations_formula = (math.factorial(n)/math.factorial(n-k))
+subsets_formula = (math.factorial(k+n-1)/(math.factorial(k)*(math.factorial(n-1))))
 
 #input and format data
 with open("france.txt", "r") as file:
@@ -80,12 +84,18 @@ with open("france.txt", "r") as file:
 #create variations (porzadki odwiedzin M z N)
 print("Variations(without repeats)")
 variations_count, variations = generate_variations(data, k)
-print(f"n = {n}, k = {k}, variations_count = {variations_count}\n\n")
+print(f"n = {n}, k = {k}, variations_count = {variations_count}\n")
+print("Variations number from formula = ")
+print(variations_formula)
+print("\n\n")
 
 #subsets(podzbiory z mozliwymi powtorzeniami)
 print("Subsets: ")
 subsets_count, subsets = generate_subsets(data, m)
 print(f"n = {n}, m = {m}, subsets_count = {subsets_count}\n\n")
+print("Subset number from formula = ")
+print(subsets_formula)
+print("\n\n")
 
 #distances for all permutations(orders)
 distances = []
