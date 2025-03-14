@@ -105,8 +105,12 @@ for order in variations:
     for city in order[1:]:
         result += current.distance(city)
         current = city
+        #print(result)
+        #print("\n")
     result += current.distance(order[0])
     distances.append(result)
+    #print(result)
+    #print("\n")
 
 # ascending sort so the first entry is the smallest
 order_distances = list(zip(variations, distances))
@@ -119,42 +123,35 @@ print(shortest_trip, order_distances[0][1])
 print("\n")
 
 
-# population for subsets
+# Population for subsets
 
 total_population = sum(city.population for city in data[:n])
-target_population = total_population / 2
+lower_bound = 0.4 * total_population
+upper_bound = 0.6 * total_population
 
-best_match = float('inf')  #initial difference -> infinity
-best_subset = None
+valid_count = 0  # Count of subsets within the 40%-60% range
 
 populations = []
-valid_subsets = [] #without repetitions (valid)
+valid_subsets = []  # Subsets that do not contain repeated cities
+total_subsets = len(subsets)  # Total number of generated subsets
 
 for subset in subsets:
-
-    if len(set(subset)) != len(subset):  # if a city is doubled -> skip
+    if len(set(subset)) != len(subset):  # Skip subsets with duplicate cities
         continue
 
-    result = 0
-    used = set() #no duplicates
-
-    for city in subset:
-        result += city.population
-
-    populations.append(result)
+    subset_population = sum(city.population for city in subset)
+    populations.append(subset_population)
     valid_subsets.append(subset)
 
-    # if closer to 50% than previous match?
-    if abs(result - target_population) < best_match:
-        best_match = abs(result - target_population)
-        best_subset = subset
+    # Check if subset population is within the 40%-60% range
+    if lower_bound <= subset_population <= upper_bound:
+        valid_count += 1
 
-# grouping subsets with their populations
-subset_population = list(zip(valid_subsets, populations))
-subset_population.sort(key=lambda x: abs(x[1] - target_population))  # sort by distance from 50%
+# Compute probability
+probability = valid_count / total_subsets if total_subsets > 0 else 0
 
 print(f"Total population: {total_population}")
-print(f"Target 50% population: {target_population:.2f}")
-print("Closest subset to 50% of total population: ")
-print([str(city) for city in best_subset], best_match + target_population)
-print("\n")
+print(f"Population range for probability calculation: {lower_bound:.2f} - {upper_bound:.2f}")
+print(f"Total subsets checked: {total_subsets}")
+print(f"Valid subsets in range: {valid_count}")
+print(f"Probability of a random subset falling within 40%-60% of total population: {probability:.4f}")
