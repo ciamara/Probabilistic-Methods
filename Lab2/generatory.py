@@ -4,7 +4,7 @@ import numpy as np
 # 2.3 --> Xn+1 = A*Xn mod M
 # 2.6 --> bi = b(i-p) xor b(i-q)
 
-def checkValidity(vec):
+def checkValidityLinear(vec):
 
     counts = {
         '0-1K': 0,
@@ -44,16 +44,56 @@ def checkValidity(vec):
     
     return counts
 
+def checkValidityShift(vec):
 
-def shiftGen(n, p, q, b):
+    counts = {
+        '0-20': 0,
+        '21-40': 0,
+        '41-60': 0,
+        '61-80': 0,
+        '81-100': 0,
+        '101-128': 0
+    }
+    
+    # Check each number in the vector
+    for num in vec:
+        if 0 <= num <= 20:
+            counts['0-20'] += 1
+        elif 21 <= num <= 40:
+            counts['21-40'] += 1
+        elif 41 <= num <= 60:
+            counts['41-60'] += 1
+        elif 61 <= num <= 80:
+            counts['61-80'] += 1
+        elif 81 <= num <= 100:
+            counts['81-100'] += 1
+        elif 101 <= num <= 128:
+            counts['101-128'] += 1
+    
+    return counts
 
-    results = b.copy()
 
+def shiftGen(n, p, q, b, length):
+
+    bits = []
+    previous = b.copy()
+
+    for i in range(n * length):
+        new_bit = previous[-p] ^ previous[-q]
+        previous = previous[1:] + [new_bit]
+        bits.append(new_bit)
+
+    # bits to ints
+    results = []
     for i in range(n):
-        bi = results[i - p] ^ results[i - q]
-        results.append(bi)
+        chunk = bits[i * length:(i + 1) * length]
+        number = 0
+        for bit in chunk:
+            number = (number << 1) | bit
+        results.append(number)
 
     return results
+
 
 def vectorGen(n, M):
 
@@ -81,13 +121,11 @@ def linearGen(n, X0, a, c, M):
 
 
     ciag = []
-    ciag.append(X0)
+    #ciag.append(X0)
 
     for i in range(n):
         X0 = (a*X0 + c) % M
         ciag.append(X0)
-
-    print(ciag)
 
     return ciag
 
@@ -104,22 +142,24 @@ def _main():
     p = 7
     q = 3
     b = [1, 1, 0, 1, 1, 0, 1]
+    length = len(b)
 
     # generator liniowy
     lin = linearGen(n, X0, a, c, M)
-    print("Generator liniowy (pierwsze 10): ")
-    print(lin[:10])
-    print("Counted: ", checkValidity(lin))
+    print("Generator liniowy: ")
+    print(lin)
+    print("Counted: ", checkValidityLinear(lin))
 
     # generator wektorow
-    vec = vectorGen(n, M)
-    print("Generator wektorow (pierwsze 10): ")
-    for i, v in enumerate(vec[:10]):
-        print(f"X{i} =", v)
+    # vec = vectorGen(n, M)
+    # print("Generator wektorow (pierwsze 10): ")
+    # for i, v in enumerate(vec[:10]):
+    #     print(f"X{i} =", v)
 
-    sh = shiftGen(n, p, q, b)
-    print("Generator po przesunieciu (pierwsze 20): ")
-    print(sh[:20])
+    sh = shiftGen(n, p, q, b, length)
+    print("Generator po przesunieciu: ")
+    print(sh)
+    print("Counted: ", checkValidityShift(sh))
 
 
 _main()
