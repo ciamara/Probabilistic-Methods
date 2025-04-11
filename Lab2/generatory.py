@@ -4,72 +4,83 @@ import numpy as np
 # 2.3 --> Xn+1 = A*Xn mod M
 # 2.6 --> bi = b(i-p) xor b(i-q)
 
-def checkValidityLinear(vec):
+def checkValidityLinear(vec, M):
 
     counts = {
-        '0-1K': 0,
-        '1K+1-2K': 0,
-        '2K+1-3K': 0,
-        '3K+1-4K': 0,
-        '4K+1-5K': 0,
-        '5K+1-6K': 0,
-        '6K+1-7K': 0,
-        '7K+1-8K': 0,
-        '8K+1-9K': 0,
-        '9K+1-10K': 0
+        'I': 0,
+        'II': 0,
+        'III': 0,
+        'IV': 0,
+        'V': 0,
+        'VI': 0,
+        'VII': 0,
+        'VIII': 0,
+        'IX': 0,
+        'X': 0
     }
     
     # Check each number in the vector
     for num in vec:
-        if 0 <= num <= 10000000:
-            counts['0-1K'] += 1
-        elif 10000001 <= num <= 20000000:
-            counts['1K+1-2K'] += 1
-        elif 20000001 <= num <= 30000000:
-            counts['2K+1-3K'] += 1
-        elif 30000001 <= num <= 40000000:
-            counts['3K+1-4K'] += 1
-        elif 40000001 <= num <= 50000000:
-            counts['4K+1-5K'] += 1
-        elif 50000001 <= num <= 60000000:
-            counts['5K+1-6K'] += 1
-        elif 60000001 <= num <= 70000000:
-            counts['6K+1-7K'] += 1
-        elif 70000001 <= num <= 80000000:
-            counts['7K+1-8K'] += 1
-        elif 80000001 <= num <= 90000000:
-            counts['8K+1-9K'] += 1
-        elif 90000001 <= num <= 100000000:
-            counts['9K+1-10K'] += 1
+        if 0 <= num <= (M/10):
+            counts['I'] += 1
+        elif (M/10 +1) <= num <= (2*M/10):
+            counts['II'] += 1
+        elif (2*M/10) <= num <= (3*M/10):
+            counts['III'] += 1
+        elif (3*M/10) <= num <= (4*M/10):
+            counts['IV'] += 1
+        elif (4*M/10) <= num <= (5*M/10):
+            counts['V'] += 1
+        elif (5*M/10) <= num <= (6*M/10):
+            counts['VI'] += 1
+        elif (6*M/10) <= num <= (7*M/10):
+            counts['VII'] += 1
+        elif (7*M/10) <= num <= (8*M/10):
+            counts['VIII'] += 1
+        elif (8*M/10) <= num <= (9*M/10):
+            counts['IX'] += 1
+        elif (9*M/10) <= num <= M:
+            counts['X'] += 1
     
     return counts
 
-def checkValidityShift(vec):
+def checkValidityShift(vec, b):
 
     counts = {
-        '0-20': 0,
-        '21-40': 0,
-        '41-60': 0,
-        '61-80': 0,
-        '81-100': 0,
-        '101-128': 0
+        'I': 0,
+        'II': 0,
+        'III': 0,
+        'IV': 0,
+        'V': 0,
+        'VI': 0,
+        'VII': 0,
+        'VIII': 0,
+        'IX': 0,
+        'X': 0
     }
     
     # Check each number in the vector
     for num in vec:
-        if 0 <= num <= 20:
-            counts['0-20'] += 1
-        elif 21 <= num <= 40:
-            counts['21-40'] += 1
-        elif 41 <= num <= 60:
-            counts['41-60'] += 1
-        elif 61 <= num <= 80:
-            counts['61-80'] += 1
-        elif 81 <= num <= 100:
-            counts['81-100'] += 1
-        elif 101 <= num <= 128:
-            counts['101-128'] += 1
-    
+        if 0 <= num <= (2**len(b)/10):
+            counts['I'] += 1
+        elif (2**len(b)/10) <= num <= (2*2**len(b)/10):
+            counts['II'] += 1
+        elif (2*2**len(b)/10) <= num <= (3*2**len(b)/10):
+            counts['III'] += 1
+        elif (3*2**len(b)/10) <= num <= (4*2**len(b)/10):
+            counts['IV'] += 1
+        elif (4*2**len(b)/10) <= num <= (5*2**len(b)/10):
+            counts['V'] += 1
+        elif (5*2**len(b)/10) <= num <= (6*2**len(b)/10):
+            counts['VI'] += 1
+        elif (6*2**len(b)/10) <= num <= (7*2**len(b)/10):
+            counts['VII'] += 1
+        elif (7*2**len(b)/10) <= num <= (8*2**len(b)/10):
+            counts['VIII'] += 1
+        elif (8*2**len(b)/10) <= num <= (9*2**len(b)/10):
+            counts['IX'] += 1
+        elif (9*2**len(b)/10) <= num <= (2**len(b)):
+            counts['X'] += 1   
     return counts
 
 
@@ -148,7 +159,7 @@ def _main():
     lin = linearGen(n, X0, a, c, M)
     print("Generator liniowy: ")
     print(lin)
-    print("Counted: ", checkValidityLinear(lin))
+    print("Counted: ", checkValidityLinear(lin, M))
 
     # generator wektorow
     # vec = vectorGen(n, M)
@@ -159,7 +170,7 @@ def _main():
     sh = shiftGen(n, p, q, b, length)
     print("Generator po przesunieciu: ")
     print(sh)
-    print("Counted: ", checkValidityShift(sh))
+    print("Counted: ", checkValidityShift(sh, b))
 
 
 _main()
