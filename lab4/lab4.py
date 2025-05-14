@@ -49,13 +49,11 @@ for _ in range(100000):
     x, y = create_random_vector()
     results[x][y] += 1
 
-# Print header with consistent width
 print(f"{'X\\Y':<4}", end="")
 for y in range(1, 5):
     print(f"{y:>8}", end="")
 print()
 
-# Print rows
 for x in range(1, 5):
     print(f"{x:<4}", end="")
     for y in range(1, 5):
